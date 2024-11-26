@@ -1,30 +1,30 @@
 - [1. PowerShell Workshop in Warsaw on 26. November 2024](#1-powershell-workshop-in-warsaw-on-26-november-2024)
-  - [Useful modules](#useful-modules)
-  - [1.1. Content](#11-content)
-    - [1.1.1. Git Introduction](#111-git-introduction)
-      - [1.1.1.1. Markdown](#1111-markdown)
-    - [1.1.2. Recap](#112-recap)
-      - [1.1.2.1. Here String](#1121-here-string)
-      - [Native commands return text](#native-commands-return-text)
-      - [Error handling](#error-handling)
-      - [The difference between singe and double-quoted strings and the format operator](#the-difference-between-singe-and-double-quoted-strings-and-the-format-operator)
-      - [Reading and Path environment variable](#reading-and-path-environment-variable)
-      - [Format-Table with dynamic / custom columns](#format-table-with-dynamic--custom-columns)
-      - [Out-GridView and the PassThru switch](#out-gridview-and-the-passthru-switch)
+  - [1.1. Useful modules](#11-useful-modules)
+  - [1.2. Content](#12-content)
+    - [1.2.1. Git Introduction](#121-git-introduction)
+      - [1.2.1.1. Markdown](#1211-markdown)
+    - [1.2.2. Recap](#122-recap)
+      - [1.2.2.1. Here String](#1221-here-string)
+      - [1.2.2.2. Native commands return text](#1222-native-commands-return-text)
+      - [1.2.2.3. Error handling](#1223-error-handling)
+      - [1.2.2.4. The difference between singe and double-quoted strings and the format operator](#1224-the-difference-between-singe-and-double-quoted-strings-and-the-format-operator)
+      - [1.2.2.5. Reading and Path environment variable](#1225-reading-and-path-environment-variable)
+      - [1.2.2.6. Format-Table with dynamic / custom columns](#1226-format-table-with-dynamic--custom-columns)
+      - [1.2.2.7. Out-GridView and the PassThru switch](#1227-out-gridview-and-the-passthru-switch)
 
 
 # 1. PowerShell Workshop in Warsaw on 26. November 2024
 
-## Useful modules
+## 1.1. Useful modules
 
 - PSScriptAnalyzer
 - NTFSSecurity
 - AutomatedLab
 - 
 
-## 1.1. Content
+## 1.2. Content
 
-### 1.1.1. Git Introduction
+### 1.2.1. Git Introduction
 
 Git is usually used with a remote source which is hosted on GitHub, Azure DevOps or other products that support Git. But, it can be also used locally.
 
@@ -68,13 +68,13 @@ git remote add origin https://github.com/raandree/241126PowerShellWorkshopWarsaw
 git push -u origin master
 ```
 
-#### 1.1.1.1. Markdown
+#### 1.2.1.1. Markdown
 
 Refer to the [getting started guide](https://www.markdownguide.org/getting-started/).
 
-### 1.1.2. Recap
+### 1.2.2. Recap
 
-#### 1.1.2.1. Here String
+#### 1.2.2.1. Here String
 
 In PowerShell, you can use here-strings to declare blocks of text. They’re declared just like regular strings except they have an @ on each end. Instead of being limited to one line, you can declare an entire block or a multiple line string.
 
@@ -89,7 +89,7 @@ hello "@
 "@
 ```
 
-#### Native commands return text
+#### 1.2.2.2. Native commands return text
 
 As native commands return only text, we have to use regular expressions to extract the data that we are interested in like this:
 
@@ -131,7 +131,7 @@ Property :
 #>
 ```
 
-#### Error handling
+#### 1.2.2.3. Error handling
 
 When `ErrorAction SilentlyContinue` is used, you need to make sure the return value of the cmdlet was as expected (`$folder -ne $null`):
 
@@ -161,7 +161,7 @@ catch
 }
 ```
 
-#### The difference between singe and double-quoted strings and the format operator
+#### 1.2.2.4. The difference between singe and double-quoted strings and the format operator
 
 ```powershell
 $a = 5
@@ -181,7 +181,7 @@ $totalWorkingSet = ($p.WS | Measure-Object -Sum).Sum / 1GB
 1..1000 | ForEach-Object { "Test {0:d4}" -f $_ }
 ```
 
-#### Reading and Path environment variable
+#### 1.2.2.5. Reading and Path environment variable
 
 The `PATH` and `PSModulePath` environment variables are used to specify directories for executable files and PowerShell modules, respectively.
 
@@ -190,7 +190,7 @@ $env:PSModulePath -split ';'
 $env:Path -split ';'
 ```
 
-#### Format-Table with dynamic / custom columns
+#### 1.2.2.6. Format-Table with dynamic / custom columns
 
 This PowerShell script customizes the output of the dir (alias for Get-ChildItem) command to display file sizes in gigabytes.
 
@@ -203,7 +203,7 @@ $sizeColumn = @{
 dir | Format-Table -Property Length, $sizeColumn, Name
 ```
 
-#### Out-GridView and the PassThru switch
+#### 1.2.2.7. Out-GridView and the PassThru switch
 
 This PowerShell command sequence allows the user to select one or more running processes from an interactive grid view window and then stops the selected processes.
 
