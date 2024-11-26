@@ -11,6 +11,6 @@ function Get-DatumRsopCache
     else
     {
         $script:rsopCache = @{}
-        Write-Verbose 'The Datum RSOP Cache is empty.'
+        Write-Verbose 'The Datum RSOP Cache is empty....'
     }
 }
