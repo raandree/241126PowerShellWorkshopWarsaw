@@ -239,3 +239,34 @@ $result = Invoke-Command -ScriptBlock $sb -ComputerName $computers.DnsHostName
 
 $result | Select-Object -Property Name, WS, Handles, PSComputerName | Out-GridView -PassThru
 ```
+
+This is an extended version of the script with error handling to report on machines that are offline:
+
+```powershell
+$sb = {
+    Get-Process | Select-Object -First 2
+}
+
+$computers = Get-ADComputer -Filter *
+$offlineComputers = @()
+$allResults = @()
+
+foreach ($computer in $computers) {
+    try {
+        $result = Invoke-Command -ScriptBlock $sb -ComputerName $computer.DnsHostName -ErrorAction Stop
+        $allResults += $result
+    } catch {
+        Write-Host "Failed to connect to $($computer.DnsHostName)"
+        $offlineComputers += $computer.DnsHostName
+    }
+}
+
+if ($allResults.Count -gt 0) {
+    $allResults | Select-Object -Property Name, WS, Handles, PSComputerName | Out-GridView -PassThru
+}
+
+if ($offlineComputers.Count -gt 0) {
+    Write-Host "The following computers were offline or unreachable:"
+    $offlineComputers | ForEach-Object { Write-Host $_ }
+}
+```
