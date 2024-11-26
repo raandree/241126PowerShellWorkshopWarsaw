@@ -11,6 +11,7 @@
       - [1.2.2.5. Reading and Path environment variable](#1225-reading-and-path-environment-variable)
       - [1.2.2.6. Format-Table with dynamic / custom columns](#1226-format-table-with-dynamic--custom-columns)
       - [1.2.2.7. Out-GridView and the PassThru switch](#1227-out-gridview-and-the-passthru-switch)
+      - [Where-Object Filtering](#where-object-filtering)
 
 
 # 1. PowerShell Workshop in Warsaw on 26. November 2024
@@ -269,4 +270,27 @@ if ($offlineComputers.Count -gt 0) {
     Write-Host "The following computers were offline or unreachable:"
     $offlineComputers | ForEach-Object { Write-Host $_ }
 }
+```
+
+#### Where-Object Filtering
+
+Filtering with a scriptblock like it works since PowerShell 1.0
+
+```powershell
+Get-Process | Where-Object -FilterScript { $_.WS -gt 500MB }
+Get-Process | Where-Object { $_.WS -gt 500MB }
+```
+
+Since PowerShell 3.0, you can use the -Property parameter to specify the property to filter on.
+It is simpler and more readable than the scriptblock syntax but you cannot combine multiple conditions in a single command.
+
+```powershell
+Get-Process | Where-Object -Property WS -GT -Value 500MB
+Get-Process | Where-Object WS -GT 500MB
+```
+
+If you have multiple conditions, you must use the scriptblock syntax.
+
+```powershell
+Get-Process | Where-Object { $_.WS -gt 50MB -and $_.Name -like 'a*' }
 ```
