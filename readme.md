@@ -39,6 +39,13 @@ git merge fix/bug2
 git branch -d fix/bug2
 ```
 
+To upload / publish the code to GitHub, add a remote repository link like that:
+
+```powershell
+git remote add origin https://github.com/raandree/241126PowerShellWorkshopWarsaw.git
+git push -u origin master
+```
+
 #### Markdown
 
 Refer to the [getting started guide](https://www.markdownguide.org/getting-started/).
