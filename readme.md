@@ -9,6 +9,8 @@
       - [Error handling](#error-handling)
       - [The difference between singe and double-quoted strings and the format operator](#the-difference-between-singe-and-double-quoted-strings-and-the-format-operator)
       - [Reading and Path environment variable](#reading-and-path-environment-variable)
+      - [Format-Table with dynamic / custom columns](#format-table-with-dynamic--custom-columns)
+      - [Out-GridView and the PassThru switch](#out-gridview-and-the-passthru-switch)
 
 
 # 1. PowerShell Workshop in Warsaw on 26. November 2024
@@ -186,4 +188,54 @@ The `PATH` and `PSModulePath` environment variables are used to specify director
 ```powershell
 $env:PSModulePath -split ';'
 $env:Path -split ';'
+```
+
+#### Format-Table with dynamic / custom columns
+
+This PowerShell script customizes the output of the dir (alias for Get-ChildItem) command to display file sizes in gigabytes.
+
+```powershell
+$sizeColumn = @{ 
+    Name       = 'Size' 
+    Expression = { [Math]::Round($_.Length / 1GB, 2) }
+    Width      = 8 
+}
+dir | Format-Table -Property Length, $sizeColumn, Name
+```
+
+#### Out-GridView and the PassThru switch
+
+This PowerShell command sequence allows the user to select one or more running processes from an interactive grid view window and then stops the selected processes.
+
+```powershell
+Get-Process | Out-GridView -PassThru
+Get-Process | Out-GridView -PassThru | Stop-Process
+```
+
+`Out-GridView` does not work remotely. However, you can get the data remotely and show it locally.
+
+```powershell
+$sb = {
+    Get-Process
+}
+
+$result = Invoke-Command -ScriptBlock $sb -ComputerName dsccasql01
+
+$result | Out-GridView -PassThru
+```
+
+This PowerShell script retrieves the first two running processes from multiple remote computers and displays the selected processes in an interactive grid view window.
+
+Yes, `Invoke-Command` can execute the script block on multiple remote computers in parallel, which can improve performance when querying multiple machines. By default, `Invoke-Command` runs commands in parallel on up to 32 remote computers. You can adjust this limit using the `-ThrottleLimit` parameter if needed.
+
+```powershell
+$sb = {
+    Get-Process | Select-Object -First 2
+}
+
+$computers = Get-ADComputer -Filter *
+
+$result = Invoke-Command -ScriptBlock $sb -ComputerName $computers.DnsHostName
+
+$result | Select-Object -Property Name, WS, Handles, PSComputerName | Out-GridView -PassThru
 ```
