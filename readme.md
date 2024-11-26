@@ -1,4 +1,5 @@
 - [1. PowerShell Workshop in Warsaw on 26. November 2024](#1-powershell-workshop-in-warsaw-on-26-november-2024)
+  - [Useful modules](#useful-modules)
   - [1.1. Content](#11-content)
     - [1.1.1. Git Introduction](#111-git-introduction)
       - [1.1.1.1. Markdown](#1111-markdown)
@@ -6,9 +7,18 @@
       - [1.1.2.1. Here String](#1121-here-string)
       - [Native commands return text](#native-commands-return-text)
       - [Error handling](#error-handling)
+      - [The difference between singe and double-quoted strings and the format operator](#the-difference-between-singe-and-double-quoted-strings-and-the-format-operator)
+      - [Reading and Path environment variable](#reading-and-path-environment-variable)
 
 
 # 1. PowerShell Workshop in Warsaw on 26. November 2024
+
+## Useful modules
+
+- PSScriptAnalyzer
+- NTFSSecurity
+- AutomatedLab
+- 
 
 ## 1.1. Content
 
@@ -149,3 +159,31 @@ catch
 }
 ```
 
+#### The difference between singe and double-quoted strings and the format operator
+
+```powershell
+$a = 5
+
+"The value of `$a is $a"
+'The value of `$a is $a'
+
+$p = Get-Process
+$totalWorkingSet = ($p.WS | Measure-Object -Sum).Sum / 1GB
+"There are " + $p.Count + " processes running"
+"There are $($p.Count) processes running"
+'There are {0} processes running' -f $p.Count
+
+'There are {0} processes running which consume {1:N2} GB of memory' -f $p.Count, $totalWorkingSet
+
+#Create a list of 1000 strings with the format "Test 0001", "Test 0002", etc.
+1..1000 | ForEach-Object { "Test {0:d4}" -f $_ }
+```
+
+#### Reading and Path environment variable
+
+The `PATH` and `PSModulePath` environment variables are used to specify directories for executable files and PowerShell modules, respectively.
+
+```powershell
+$env:PSModulePath -split ';'
+$env:Path -split ';'
+```
