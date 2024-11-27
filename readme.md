@@ -23,9 +23,9 @@
         - [1.2.2.15.2. Why Use Hashtables?](#122152-why-use-hashtables)
         - [1.2.2.15.3. Where are Hashtables Used in PowerShell?](#122153-where-are-hashtables-used-in-powershell)
         - [1.2.2.15.4. Exporting Hashtables](#122154-exporting-hashtables)
-      - [Parameter Sets in PowerShell](#parameter-sets-in-powershell)
-        - [Key Points:](#key-points)
-      - [Splatting in PowerShell](#splatting-in-powershell)
+      - [1.2.2.16. Parameter Sets in PowerShell](#12216-parameter-sets-in-powershell)
+        - [1.2.2.16.1. Key Points:](#122161-key-points)
+      - [1.2.2.17. Splatting in PowerShell](#12217-splatting-in-powershell)
 
 
 # 1. PowerShell Workshop in Warsaw on 26. November 2024
@@ -565,11 +565,11 @@ $importedEmployees
 > - [HashtableExample.ps1](./assets/HashtableExample.ps1)
 > - [ArrayOfHashtablesExample.ps1](./assets/ArrayOfHashtablesExample.ps1)
 
-#### Parameter Sets in PowerShell
+#### 1.2.2.16. Parameter Sets in PowerShell
 
 Parameter sets in PowerShell allow you to define different sets of parameters for a single cmdlet or function. This enables you to create versatile commands that can handle various scenarios by grouping parameters into distinct sets. Each parameter set can have its own unique combination of mandatory and optional parameters, providing flexibility and clarity in how the cmdlet or function is used.
 
-##### Key Points:
+##### 1.2.2.16.1. Key Points:
 - **Purpose**: To provide different ways to call a cmdlet or function, depending on the parameters provided.
 - **Mutually Exclusive**: Parameters in different parameter sets are mutually exclusive; you can only use parameters from one set at a time.
 - **Default Parameter Set**: You can specify a default parameter set that PowerShell will use if it cannot determine which set to use based on the provided parameters.
@@ -602,7 +602,7 @@ Connect-ExchangeServer -IpAddress 192.168.10.10
 Connect-ExchangeServer -ComputerName ex1 -IpAddress 192.168.10.10
 ```
 
-#### Splatting in PowerShell
+#### 1.2.2.17. Splatting in PowerShell
 
 Splatting in PowerShell is a method of passing a collection of parameter values to a command. It allows you to bundle parameters into a single variable, making your scripts cleaner and easier to read. Splatting can be done using either a hash table or an array.
 
