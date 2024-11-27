@@ -12,6 +12,7 @@
       - [1.2.2.6. Format-Table with dynamic / custom columns](#1226-format-table-with-dynamic--custom-columns)
       - [1.2.2.7. Out-GridView and the PassThru switch](#1227-out-gridview-and-the-passthru-switch)
       - [Where-Object Filtering](#where-object-filtering)
+      - [Group-Object samples](#group-object-samples)
 
 
 # 1. PowerShell Workshop in Warsaw on 26. November 2024
@@ -294,3 +295,34 @@ If you have multiple conditions, you must use the scriptblock syntax.
 ```powershell
 Get-Process | Where-Object { $_.WS -gt 50MB -and $_.Name -like 'a*' }
 ```
+
+#### Group-Object samples
+
+This PowerShell command sequence lists the top 10 most common file extensions in the current directory and its subdirectories.
+
+```powershell
+dir -Recurse | Group-Object -Property Extension | Sort-Object -Property Count -Descending | Select-Object -First 10
+```
+
+---
+
+This PowerShell command sequence groups the data from a CSV file by the Department property, which is actually the party the senators belong to.
+
+```powershell
+$p = Import-Csv .\assets\People.csv
+$p | Group-Object -Property Department
+```
+
+---
+
+This PowerShell command sequence groups files by their creation date and sorts the groups in descending order by date.
+
+```powershell
+$data = dir -Recurse | Group-Object -Property { $_.CreationTime.ToString('yy MM dd') } | Sort-Object -Property Name -Descending
+```
+
+`dir -Recurse`: Recursively lists all files in the current directory and its subdirectories.
+`Group-Object -Property { $_.CreationTime.ToString('yy MM dd') }`: Groups the files by their creation date. The `ToString('yy MM dd')` method formats the creation date as a string in the format yy MM dd (two-digit year, two-digit month, two-digit day).
+`Sort-Object -Property Name -Descending`: Sorts the groups by the group name (which is the formatted creation date) in descending order.
+
+The result is a collection of file groups, each group containing files created on the same date, sorted from the most recent to the oldest.
