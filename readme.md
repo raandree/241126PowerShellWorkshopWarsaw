@@ -29,10 +29,10 @@
 
 ## 1.1. Useful modules
 
-- PSScriptAnalyzer
-- NTFSSecurity
-- AutomatedLab
-- 
+- [psconf.eu](https://psconf.eu/) - is the premier European PowerShell conference where you can learn from and network with top PowerShell experts and enthusiasts, enhancing your skills and knowledge in a collaborative environment.
+- [PSScriptAnalyzer](https://github.com/PowerShell/PSScriptAnalyzer) - PSScriptAnalyzer is a static code checker for PowerShell modules and scripts.
+- [NTFSSecurity](https://github.com/raandree/NTFSSecurity) - Easy permission management on the file system.
+- [AutomatedLab](https://automatedlab.org/en/latest/) - AutomatedLab is a powerful and easy-to-use automation framework that simplifies the creation and management of complex lab environments for testing and development.
 
 ## 1.2. Content
 
