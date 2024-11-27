@@ -11,11 +11,18 @@
       - [1.2.2.5. Reading and Path environment variable](#1225-reading-and-path-environment-variable)
       - [1.2.2.6. Format-Table with dynamic / custom columns](#1226-format-table-with-dynamic--custom-columns)
       - [1.2.2.7. Out-GridView and the PassThru switch](#1227-out-gridview-and-the-passthru-switch)
-      - [Where-Object Filtering](#where-object-filtering)
-      - [Group-Object samples](#group-object-samples)
-      - [RegEx](#regex)
-      - [Select-Object and very different return values](#select-object-and-very-different-return-values)
-      - [Automatic Member Enumeration](#automatic-member-enumeration)
+      - [1.2.2.8. Where-Object Filtering](#1228-where-object-filtering)
+      - [1.2.2.9. Group-Object samples](#1229-group-object-samples)
+      - [1.2.2.10. RegEx](#12210-regex)
+      - [1.2.2.11. Select-Object and very different return values](#12211-select-object-and-very-different-return-values)
+      - [1.2.2.12. Automatic Member Enumeration](#12212-automatic-member-enumeration)
+      - [1.2.2.13. When to use which kind of bracket?](#12213-when-to-use-which-kind-of-bracket)
+      - [1.2.2.14. PowerShell Command History](#12214-powershell-command-history)
+      - [1.2.2.15. Hashtables in PowerShell](#12215-hashtables-in-powershell)
+        - [1.2.2.15.1. What are Hashtables?](#122151-what-are-hashtables)
+        - [1.2.2.15.2. Why Use Hashtables?](#122152-why-use-hashtables)
+        - [1.2.2.15.3. Where are Hashtables Used in PowerShell?](#122153-where-are-hashtables-used-in-powershell)
+        - [1.2.2.15.4. Exporting Hashtables](#122154-exporting-hashtables)
 
 
 # 1. PowerShell Workshop in Warsaw on 26. November 2024
@@ -276,7 +283,7 @@ if ($offlineComputers.Count -gt 0) {
 }
 ```
 
-#### Where-Object Filtering
+#### 1.2.2.8. Where-Object Filtering
 
 Filtering with a scriptblock like it works since PowerShell 1.0
 
@@ -299,7 +306,7 @@ If you have multiple conditions, you must use the scriptblock syntax.
 Get-Process | Where-Object { $_.WS -gt 50MB -and $_.Name -like 'a*' }
 ```
 
-#### Group-Object samples
+#### 1.2.2.9. Group-Object samples
 
 This PowerShell command sequence lists the top 10 most common file extensions in the current directory and its subdirectories.
 
@@ -339,7 +346,7 @@ Get-Process -PipelineVariable p | ForEach-Object { $_.Threads } | Select-Object 
 > Note: In PowerShell, the `-PipelineVariable` parameter is used without the `$` sign. The `$` sign is used to reference variables, but when defining a pipeline variable, you only specify the variable name without the `$`.
 > So, `-PipelineVariable p` defines a pipeline variable named `p`, which can then be referenced as `$p` later in the pipeline.
 
-#### RegEx
+#### 1.2.2.10. RegEx
 Regular expressions (Regex) are used for pattern matching and text manipulation. Here are some reasons to use Regex:
 
 - Pattern Matching: Identify and extract specific patterns in text, such as phone numbers, email addresses, or dates.
@@ -356,7 +363,7 @@ Useful resources:
 - [regular expressions 101](https://regex101.com/)
 - [Regex Tutorial - A Cheatsheet with Examples!](https://regextutorial.org/)
 
-#### Select-Object and very different return values
+#### 1.2.2.11. Select-Object and very different return values
 
 The difference between these two lines lies in how they handle the `ID` property of the process objects:
 
@@ -370,7 +377,7 @@ The difference between these two lines lies in how they handle the `ID` property
 - This command expands the `ID` property and returns the values directly.
 - The output will be a list of process ID values (integers) without any additional object structure.
 
-#### Automatic Member Enumeration
+#### 1.2.2.12. Automatic Member Enumeration
 
 ```powershell
 # Define an array of objects with a 'Name' property
@@ -407,3 +414,150 @@ $p = Get-Process | Select-Object -First 5
 $p | ForEach-Object { $_.Threads | ForEach-Object { $_.StartTime } }
 $p.Threads.StartTime
 ```
+
+#### 1.2.2.13. When to use which kind of bracket?
+
+- Normal brackets ()
+  
+  - To prioritize sections of a line like in math to prioritize additions before multiplications.
+
+    ```powershell
+    #This results in an error
+    Get-Process.Count
+
+    (Get-Process).Count
+    ```
+
+  - To call a method
+
+    ```powershell
+    $d = Get-Date
+    $d.AddDays(1)
+    ```
+
+  - If you want to create an empty array or   convert a single object into an array ob objects
+
+      ```powershell
+      $array = @()
+      $array = @(1)
+      ```
+
+- Curly brackets
+
+  - To indicate scripts blocks. Used in If, ForEach, functions, etc.
+
+      ```powershell
+      if ($a -gt 5){
+        'yes'
+      }
+      else {
+        'no'
+      }
+      ```
+
+  - To define hashtables
+
+    ```powershell
+    $ht1 = @{}
+
+    $ht2 = @{
+      key1  = 'value1'
+      Model = 'Golf'
+    }
+    ```
+
+- Square brackets
+
+  - Square brackets are used to access elements in an array:
+
+    ```powershell
+    $a = 1,2,3
+    $a[0]
+    $a[-1]
+    ```
+
+  - Square brackets are used to declare types or cast data
+
+    ```powershell
+    [int]$i = 0
+    $a = [int]'123'
+
+    $al = [System.Collections.ArrayList]::new()
+    [System.Math]::Round(1.323434, 2)
+    ```
+
+#### 1.2.2.14. PowerShell Command History
+
+PowerShell / the PSReadline module stores the history in the file `(Get-PSReadLineOption).HistorySavePath`.
+
+You can search the history with `CTRL + R` and `CTRL + F`.
+
+#### 1.2.2.15. Hashtables in PowerShell
+
+##### 1.2.2.15.1. What are Hashtables?
+
+Hashtables, also known as dictionaries or associative arrays, are a collection of key-value pairs. Each key is unique and is used to access the corresponding value. In PowerShell, hashtables are created using the `@{}` syntax.
+
+**Example**:
+```powershell
+$hashtable = @{
+    "Name" = "John Doe"
+    "Age" = 30
+    "Occupation" = "Developer"
+}
+```
+
+##### 1.2.2.15.2. Why Use Hashtables?
+
+Hashtables are used for their efficiency in storing and retrieving data. They provide a fast way to look up values based on their keys. This makes them ideal for scenarios where you need to manage and access a collection of related data quickly.
+
+##### 1.2.2.15.3. Where are Hashtables Used in PowerShell?
+
+1. **Configuration Management**: Storing configuration settings and parameters.
+2. **Data Manipulation**: Organizing and processing data retrieved from various sources.
+3. **Scripting**: Passing complex data structures between functions and scripts.
+4. **Automation**: Managing and automating administrative tasks by storing and retrieving state information.
+
+**Example Usage in PowerShell**:
+```powershell
+# Creating a hashtable
+$person = @{
+    "FirstName" = "Jane"
+    "LastName" = "Doe"
+    "Email" = "jane.doe@example.com"
+}
+
+# Accessing values
+$firstName = $person["FirstName"]
+$email = $person["Email"]
+
+# Adding a new key-value pair
+$person["Phone"] = "123-456-7890"
+
+# Iterating over a hashtable
+foreach ($key in $person.Keys) {
+    Write-Output "$key: $($person[$key])"
+}
+```
+
+Hashtables are a powerful and flexible tool in the PowerShell ecosystem, enabling efficient data management and manipulation.
+
+##### 1.2.2.15.4. Exporting Hashtables
+
+```powershell
+# Convert the hashtable to YAML
+$yaml = $employees | ConvertTo-Yaml
+
+# Store the YAML in a file
+$yaml | Out-File -FilePath 'employees.yaml'
+
+# Import the YAML from the file
+$importedEmployees = Get-Content -Path 'employees.yaml' | ConvertFrom-Yaml
+
+# Display the imported employees
+$importedEmployees
+```
+
+> Note: More hashtable examples
+> - [HashtableExample.ps1](./assets/HashtableExample.ps1)
+> - [ArrayOfHashtablesExample.ps1](./assets/ArrayOfHashtablesExample.ps1)
