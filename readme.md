@@ -25,6 +25,7 @@
         - [1.2.2.15.4. Exporting Hashtables](#122154-exporting-hashtables)
       - [Parameter Sets in PowerShell](#parameter-sets-in-powershell)
         - [Key Points:](#key-points)
+      - [Splatting in PowerShell](#splatting-in-powershell)
 
 
 # 1. PowerShell Workshop in Warsaw on 26. November 2024
@@ -600,3 +601,31 @@ Connect-ExchangeServer -IpAddress 192.168.10.10
 #The next line does not work
 Connect-ExchangeServer -ComputerName ex1 -IpAddress 192.168.10.10
 ```
+
+#### Splatting in PowerShell
+
+Splatting in PowerShell is a method of passing a collection of parameter values to a command. It allows you to bundle parameters into a single variable, making your scripts cleaner and easier to read. Splatting can be done using either a hash table or an array.
+
+**Why Splatting is Cool**?
+
+1. **Readability**: It makes your code more readable by reducing the clutter of long parameter lists.
+2. **Maintainability**: Easier to maintain and update parameters in one place.
+3. **Reusability**: You can reuse the same set of parameters for multiple commands.
+
+**Example**
+
+Here's an example of using splatting with a hash table:
+
+```powershell
+# Define a hash table with parameters
+$parameters = @{
+    Name = "example.txt"
+    Path = "C:\Temp"
+    ItemType = "File"
+}
+
+# Use splatting to pass the parameters to New-Item
+New-Item @parameters
+```
+
+In this example, the `New-Item` cmdlet creates a new file named `example.txt` in the `C:\Temp` directory. The parameters are defined in a hash table and passed to the cmdlet using the `@` symbol.
