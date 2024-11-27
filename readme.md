@@ -326,3 +326,12 @@ $data = dir -Recurse | Group-Object -Property { $_.CreationTime.ToString('yy MM 
 `Sort-Object -Property Name -Descending`: Sorts the groups by the group name (which is the formatted creation date) in descending order.
 
 The result is a collection of file groups, each group containing files created on the same date, sorted from the most recent to the oldest.
+
+###$ Use the PipelineVariable Common parameter
+
+This PowerShell command sequence retrieves the threads of each running process and selects specific properties for output, using the -PipelineVariable parameter to retain the process information.
+
+Get-Process -PipelineVariable p | ForEach-Object { $_.Threads } | Select-Object ID, StartTime, @{ Name = 'PID'; Expression = { $p.ID } }
+
+> Note: In PowerShell, the `-PipelineVariable` parameter is used without the `$` sign. The `$` sign is used to reference variables, but when defining a pipeline variable, you only specify the variable name without the `$`.
+> So, `-PipelineVariable p` defines a pipeline variable named `p`, which can then be referenced as `$p` later in the pipeline.
