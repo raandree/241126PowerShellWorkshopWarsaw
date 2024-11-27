@@ -23,6 +23,8 @@
         - [1.2.2.15.2. Why Use Hashtables?](#122152-why-use-hashtables)
         - [1.2.2.15.3. Where are Hashtables Used in PowerShell?](#122153-where-are-hashtables-used-in-powershell)
         - [1.2.2.15.4. Exporting Hashtables](#122154-exporting-hashtables)
+      - [Parameter Sets in PowerShell](#parameter-sets-in-powershell)
+        - [Key Points:](#key-points)
 
 
 # 1. PowerShell Workshop in Warsaw on 26. November 2024
@@ -561,3 +563,40 @@ $importedEmployees
 > Note: More hashtable examples
 > - [HashtableExample.ps1](./assets/HashtableExample.ps1)
 > - [ArrayOfHashtablesExample.ps1](./assets/ArrayOfHashtablesExample.ps1)
+
+#### Parameter Sets in PowerShell
+
+Parameter sets in PowerShell allow you to define different sets of parameters for a single cmdlet or function. This enables you to create versatile commands that can handle various scenarios by grouping parameters into distinct sets. Each parameter set can have its own unique combination of mandatory and optional parameters, providing flexibility and clarity in how the cmdlet or function is used.
+
+##### Key Points:
+- **Purpose**: To provide different ways to call a cmdlet or function, depending on the parameters provided.
+- **Mutually Exclusive**: Parameters in different parameter sets are mutually exclusive; you can only use parameters from one set at a time.
+- **Default Parameter Set**: You can specify a default parameter set that PowerShell will use if it cannot determine which set to use based on the provided parameters.
+- **ParameterSetName Attribute**: Used to assign parameters to specific parameter sets.
+
+An example for connecting to a server by either the name or IP address:
+
+```powershell
+function Connect-ExchangeServer {
+    param (
+        [Parameter(Mandatory=$true, ParameterSetName = 'ByComputerName')]
+        [string]$ComputerName,
+
+        [Parameter(Mandatory=$true, ParameterSetName = 'ByIpAddress')]
+        [string]$IpAddress
+    )
+
+    if ($PSCmdlet.ParameterSetName -eq 'ByIpAddress')
+    {
+        $ComputerName = [System.Net.Dns]::GetHostAddresses($IpAddress)
+    }
+
+    Write-Host "Connecting to Exchange Server '$ComputerName'"
+}
+
+Connect-ExchangeServer -ComputerName "EX01"
+Connect-ExchangeServer -IpAddress 192.168.10.10
+
+#The next line does not work
+Connect-ExchangeServer -ComputerName ex1 -IpAddress 192.168.10.10
+```
