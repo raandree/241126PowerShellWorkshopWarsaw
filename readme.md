@@ -14,6 +14,8 @@
       - [Where-Object Filtering](#where-object-filtering)
       - [Group-Object samples](#group-object-samples)
       - [RegEx](#regex)
+      - [Select-Object and very different return values](#select-object-and-very-different-return-values)
+      - [Automatic Member Enumeration](#automatic-member-enumeration)
 
 
 # 1. PowerShell Workshop in Warsaw on 26. November 2024
@@ -354,3 +356,54 @@ Useful resources:
 - [regular expressions 101](https://regex101.com/)
 - [Regex Tutorial - A Cheatsheet with Examples!](https://regextutorial.org/)
 
+#### Select-Object and very different return values
+
+The difference between these two lines lies in how they handle the `ID` property of the process objects:
+
+`Get-Process | Select-Object -Property ID`:
+
+- This command selects the `ID` property and returns objects with the ID property.
+- The output will be a list of objects, each with an `ID` property.
+
+`Get-Process | Select-Object -ExpandProperty ID`:
+
+- This command expands the `ID` property and returns the values directly.
+- The output will be a list of process ID values (integers) without any additional object structure.
+
+#### Automatic Member Enumeration
+
+```powershell
+# Define an array of objects with a 'Name' property
+$people = @(
+    [PSCustomObject]@{ Name = 'Alice'; Age = 30 },
+    [PSCustomObject]@{ Name = 'Bob'; Age = 25 },
+    [PSCustomObject]@{ Name = 'Charlie'; Age = 35 }
+)
+
+# Use Automatic Member Enumeration to directly access the 'Name' property of each object
+$names = $people.Name
+
+# Output the names
+Write-Host "Names of people: $names"
+```
+
+Automatic Member Enumeration in PowerShell works by automatically enumerating (iterating over) collections when accessing a property of each item in the collection. This feature simplifies the syntax for accessing properties of objects within a collection.
+
+**How it works internally**:
+
+- Collection Detection:
+  When you access a property on a collection of objects, PowerShell detects that the target is a collection.
+- Property Access:
+  PowerShell then attempts to access the specified property on each item within the collection.
+- Enumeration:
+  It enumerates through each item in the collection and retrieves the value of the specified property for each item.
+- Result Aggregation:
+  The results are aggregated into a new collection, which is returned as the output.
+
+Here is an example:
+
+```powershell
+$p = Get-Process | Select-Object -First 5
+$p | ForEach-Object { $_.Threads | ForEach-Object { $_.StartTime } }
+$p.Threads.StartTime
+```
