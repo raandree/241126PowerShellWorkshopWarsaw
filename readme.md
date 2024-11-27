@@ -26,6 +26,8 @@
       - [1.2.2.16. Parameter Sets in PowerShell](#12216-parameter-sets-in-powershell)
         - [1.2.2.16.1. Key Points:](#122161-key-points)
       - [1.2.2.17. Splatting in PowerShell](#12217-splatting-in-powershell)
+      - [Enums (and a Bit of Splatting)](#enums-and-a-bit-of-splatting)
+    - [New-InternalCar](#new-internalcar)
 
 
 # 1. PowerShell Workshop in Warsaw on 26. November 2024
@@ -629,3 +631,65 @@ New-Item @parameters
 ```
 
 In this example, the `New-Item` cmdlet creates a new file named `example.txt` in the `C:\Temp` directory. The parameters are defined in a hash table and passed to the cmdlet using the `@` symbol.
+
+#### Enums (and a Bit of Splatting)
+
+The following PowerShell script demonstrates the use of enums, splatting, and the `$PSBoundParameters` automatic variable.
+
+Two enums are defined: `CarMake` and `CarColor`. These enums represent the make and color of a car, respectively.
+
+```powershell
+enum CarMake {
+    Toyota
+    Honda
+    Ford
+    Chevrolet
+}
+
+enum CarColor {
+    Red
+    Blue
+    Green
+    Black
+    White
+}
+```
+
+The `New-Car` function takes four parameters: `Make`, `Model`, `Year`, and `Color`. It uses the `$PSBoundParameters` automatic variable to capture all the parameters passed to the function. The `Year` parameter is removed from `$PSBoundParameters`, and the remaining parameters are passed to the `New-InternalCar` function using splatting (`@PSBoundParameters`).
+
+```powershell
+function New-Car {
+    param(
+        [CarMake]$Make,
+        [string]$Model,
+        [int]$Year,
+        [CarColor]$Color
+    )
+
+    $PSBoundParameters.Remove('Year')
+    New-InternalCar @PSBoundParameters
+}
+```
+
+### New-InternalCar
+
+The `New-InternalCar` function takes three parameters: `Make`, `Model`, and `Color`. It simply returns the `$PSBoundParameters` automatic variable, which contains the parameters passed to the function.
+
+```powershell
+function New-InternalCar {
+    param(
+        [CarMake]$Make,
+        [string]$Model,
+        [string]$Color
+    )
+
+    $PSBoundParameters
+}
+```
+
+```powershell
+New-Car -Model 'Corolla' -Year 2018 -Color 'Red' -Make 'Toyota'
+```
+
+In this example, the `Year` parameter is removed before calling `New-InternalCar`, so the final call to `New-InternalCar` will only include `Make`, `Model`, and `Color`.
+```
