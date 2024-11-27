@@ -13,6 +13,7 @@
       - [1.2.2.7. Out-GridView and the PassThru switch](#1227-out-gridview-and-the-passthru-switch)
       - [Where-Object Filtering](#where-object-filtering)
       - [Group-Object samples](#group-object-samples)
+      - [RegEx](#regex)
 
 
 # 1. PowerShell Workshop in Warsaw on 26. November 2024
@@ -335,3 +336,21 @@ Get-Process -PipelineVariable p | ForEach-Object { $_.Threads } | Select-Object 
 
 > Note: In PowerShell, the `-PipelineVariable` parameter is used without the `$` sign. The `$` sign is used to reference variables, but when defining a pipeline variable, you only specify the variable name without the `$`.
 > So, `-PipelineVariable p` defines a pipeline variable named `p`, which can then be referenced as `$p` later in the pipeline.
+
+#### RegEx
+Regular expressions (Regex) are used for pattern matching and text manipulation. Here are some reasons to use Regex:
+
+- Pattern Matching: Identify and extract specific patterns in text, such as phone numbers, email addresses, or dates.
+- Validation: Check if a string conforms to a specific format, such as validating email addresses or passwords.
+- Search and Replace: Find and replace text based on patterns, useful for text processing and data cleaning.
+- Flexibility: Handle complex text processing tasks with concise and powerful expressions.
+- Efficiency: Perform text operations quickly and efficiently, especially with large datasets.
+
+Regex is a versatile tool for handling various text processing tasks in programming and scripting.
+
+> Note: "Some people, when confronted with a problem, think "I know, I'll use regular expressions." Now they have two problems." [Regular Expressions: Now You Have Two Problems](https://blog.codinghorror.com/regular-expressions-now-you-have-two-problems/)
+
+Useful resources:
+- [regular expressions 101](https://regex101.com/)
+- [Regex Tutorial - A Cheatsheet with Examples!](https://regextutorial.org/)
+
