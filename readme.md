@@ -28,6 +28,8 @@
       - [1.2.2.17. Splatting in PowerShell](#12217-splatting-in-powershell)
       - [Enums (and a Bit of Splatting)](#enums-and-a-bit-of-splatting)
     - [New-InternalCar](#new-internalcar)
+      - [NTFSSecurity for managing file permissions](#ntfssecurity-for-managing-file-permissions)
+      - [Debugging in Visual Studio Code](#debugging-in-visual-studio-code)
 
 
 # 1. PowerShell Workshop in Warsaw on 26. November 2024
@@ -692,4 +694,27 @@ New-Car -Model 'Corolla' -Year 2018 -Color 'Red' -Make 'Toyota'
 ```
 
 In this example, the `Year` parameter is removed before calling `New-InternalCar`, so the final call to `New-InternalCar` will only include `Make`, `Model`, and `Color`.
+
+#### NTFSSecurity for managing file permissions
+
+used /explain (rerun without)
+The NTFSSecurity PowerShell module is used to manage NTFS permissions on files and directories. It provides cmdlets to view, modify, and manage access control lists (ACLs) and inheritance settings for NTFS file system objects.
+
+```powershell
+dir -Directory | Get-NTFSInheritance | Where-Object { -not $_.AccessInheritanceEnabled } | Enable-NTFSAccessInheritance -RemoveExplicitAccessRules 
+
+Add-NTFSAccess .\DscBuildHelpers\ -Account test1 -AccessRights FullControl -AccessType Allow -AppliesTo ThisFolderAndSubfolders 
+
+dir -Recurse -Directory | Get-NTFSAccess
 ```
+
+#### Debugging in Visual Studio Code
+
+A `launch.json` file in Visual Studio Code is used to configure the debugger. It defines how to start and attach to your application, set breakpoints, and specify environment variables. This file is essential for customizing the debugging experience for different programming languages and environments.
+
+For this project we created a the [launch.json](./.vscode/launch.json) that calls the script `\assets\Gui Example 1.ps1` with an argument.
+
+
+Greg's code
+debugging
+

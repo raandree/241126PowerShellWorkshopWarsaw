@@ -1,3 +1,16 @@
+param (
+    [Parameter(Mandatory = $false)]
+    [string]$Name
+)
+
+function f1 {
+    f2
+}
+
+function f2 {
+    write-host 'x'
+}
+
 [xml]$xaml = @'
 <Window x:Class="WpfApp2.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -34,13 +47,17 @@ $namespaceManager.AddNamespace('x', 'http://schemas.microsoft.com/winfx/2006/xam
 $reader = (New-Object System.Xml.XmlNodeReader $xaml)
 $window = [Windows.Markup.XamlReader]::Load($reader)
 
+1..100 | ForEach-Object {
+    "Test $_"
+}
+
 #Find all elements with an x:Name attribute
 $uiElements = @{}
 $xaml.SelectNodes('//*[@x:Name]', $namespaceManager) | ForEach-Object {
     #and add them to a hashtable with the name as the key
     $uiElements[$_.Name] = $window.FindName($_.Name)
 }
-
+f1
 #Now we can use the variables to interact with the UI elements and add event handlers
 $uiElements.btnGo.Add_Click({
         $uiElements.lstBox.Items.Add((Get-Date))
