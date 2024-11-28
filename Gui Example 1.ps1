@@ -1,11 +1,11 @@
 [xml]$xaml = @'
-<Window
+<Window x:Class="WpfApp2.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp2"
-
+        mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="576">
     <Grid>
         <ListBox x:Name="lstBox" Margin="10,10,259,10"/>
@@ -16,10 +16,15 @@
 
     </Grid>
 </Window>
-
 '@
 
 Add-Type -AssemblyName PresentationFramework
+
+$xaml.Window.RemoveAttribute('x:Class')
+$xaml.Window.RemoveAttribute('xmlns:local')
+$xaml.Window.RemoveAttribute('xmlns:d')
+$xaml.Window.RemoveAttribute('xmlns:mc')
+$xaml.Window.RemoveAttribute('mc:Ignorable')
 
 #The namespace manager is used to search for the x:Name attributes
 #as each UI element has a name defined in the x namespace ('x:Name')
@@ -30,30 +35,26 @@ $reader = (New-Object System.Xml.XmlNodeReader $xaml)
 $window = [Windows.Markup.XamlReader]::Load($reader)
 
 #Find all elements with an x:Name attribute
+$uiElements = @{}
 $xaml.SelectNodes('//*[@x:Name]', $namespaceManager) | ForEach-Object {
-    try {
-        #and create a variable for each of them
-        Set-Variable -Name "ui_$($_.Name)" -Value $window.FindName($_.Name) -ErrorAction Stop
-    }
-    catch {
-        throw
-    }
+    #and add them to a hashtable with the name as the key
+    $uiElements[$_.Name] = $window.FindName($_.Name)
 }
 
 #Now we can use the variables to interact with the UI elements and add event handlers
-$ui_btnGo.Add_Click({
-        $ui_lstBox.Items.Add((Get-Date))
+$uiElements.btnGo.Add_Click({
+        $uiElements.lstBox.Items.Add((Get-Date))
     })
 
-$ui_btnClear.Add_Click({
-        $ui_lstBox.Items.Clear()
+$uiElements.btnClear.Add_Click({
+        $uiElements.lstBox.Items.Clear()
     })
 
-$ui_btnAddMany.Add_Click({
-        $iterations = [int]$ui_txtIterations.Text
+$uiElements.btnAddMany.Add_Click({
+        $iterations = [int]$uiElements.txtIterations.Text
         1..$iterations | ForEach-Object {
             Start-Sleep -Milliseconds 100
-            $ui_lstBox.Items.Add((Get-Date))
+            $uiElements.lstBox.Items.Add((Get-Date))
         }
     })
 
